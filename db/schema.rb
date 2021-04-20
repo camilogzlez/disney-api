@@ -10,10 +10,51 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_20_005004) do
+ActiveRecord::Schema.define(version: 2021_04_20_103438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "characters", force: :cascade do |t|
+    t.string "name"
+    t.integer "age"
+    t.integer "weight"
+    t.text "history"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_characters_on_user_id"
+  end
+
+  create_table "genres", force: :cascade do |t|
+    t.string "title"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_genres_on_user_id"
+  end
+
+  create_table "participations", force: :cascade do |t|
+    t.bigint "character_id", null: false
+    t.bigint "piece_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["character_id"], name: "index_participations_on_character_id"
+    t.index ["piece_id"], name: "index_participations_on_piece_id"
+  end
+
+  create_table "pieces", force: :cascade do |t|
+    t.string "type"
+    t.string "title"
+    t.date "creation_date"
+    t.integer "rating"
+    t.bigint "user_id", null: false
+    t.bigint "genre_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["genre_id"], name: "index_pieces_on_genre_id"
+    t.index ["user_id"], name: "index_pieces_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -27,4 +68,10 @@ ActiveRecord::Schema.define(version: 2021_04_20_005004) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "characters", "users"
+  add_foreign_key "genres", "users"
+  add_foreign_key "participations", "characters"
+  add_foreign_key "participations", "pieces"
+  add_foreign_key "pieces", "genres"
+  add_foreign_key "pieces", "users"
 end
