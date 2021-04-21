@@ -1,3 +1,4 @@
 class Character < ApplicationRecord
   belongs_to :user
-end
+  has_many :participations
+  has_many :pieces, through: :participations
