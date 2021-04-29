@@ -1,7 +1,7 @@
 class Api::V1::CharactersController < Api::V1::BaseController
   acts_as_token_authentication_handler_for User, except: [ :index, :show ]
   
-  before_action :set_character, only: [:show, :update]
+  before_action :set_character, only: [:show, :update, :destroy]
   
   def index
     @characters = policy_scope(Character)
@@ -27,6 +27,11 @@ class Api::V1::CharactersController < Api::V1::BaseController
     else
       render_error
     end
+  end
+
+  def destroy
+    @character.destroy
+    head :no_content
   end
 
   private
