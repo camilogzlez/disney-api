@@ -10,11 +10,11 @@ class CharacterPolicy < ApplicationPolicy
     end
 
     def update?
-      true
+      record.user == user
     end
 
     def create?
-      true
+      user.present?
     end
 
     def destroy?

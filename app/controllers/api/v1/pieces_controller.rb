@@ -1,6 +1,6 @@
 class Api::V1::PiecesController < Api::V1::BaseController
   acts_as_token_authentication_handler_for User, except: [ :index, :show ]
-  before_action :set_piece, only: [ :show, :update ]
+  before_action :set_piece, only: [ :show, :update, :destroy ]
 
   def index
     @pieces = policy_scope(Piece)
@@ -11,8 +11,8 @@ class Api::V1::PiecesController < Api::V1::BaseController
 
   def create
     @piece = Piece.new(piece_params)
-    @genre = Genre.find(params[:genre_id])
-    @piece.genre = @genre
+    # @genre = Genre.find(params[:id])
+    # @piece.genre.id = @genre
     @piece.user = current_user
     authorize @piece
     if @piece.save
@@ -30,6 +30,11 @@ class Api::V1::PiecesController < Api::V1::BaseController
     end
   end
 
+  def destroy
+    @piece.destroy
+    head :no_content
+  end
+
 private
 
   def set_piece
@@ -38,7 +43,7 @@ private
   end
 
   def piece_params
-    params.require(:piece).permit(:category, :title, :creation_date, :rating, :genre)
+    params.require(:piece).permit(:category, :title, :creation_date, :rating, :genre_id)
   end
 
   def render_error
