@@ -11,8 +11,6 @@ class Api::V1::PiecesController < Api::V1::BaseController
 
   def create
     @piece = Piece.new(piece_params)
-    # @genre = Genre.find(params[:id])
-    # @piece.genre.id = @genre
     @piece.user = current_user
     authorize @piece
     if @piece.save
